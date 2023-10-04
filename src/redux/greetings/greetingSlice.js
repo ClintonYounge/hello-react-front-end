@@ -1,9 +1,9 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
 const initialState = {
-    greetings: [],
-    loading: false,
-    error: null,
+  greetings: [],
+  loading: false,
+  error: null,
 };
 
 export const fetchGreetings = createAsyncThunk('greetings/fetchGreetings', async () => {
@@ -15,18 +15,22 @@ const greetingsSlice = createSlice({
   name: 'greetings',
   initialState,
   reducers: {},
-  extraReducers: {
-      [fetchGreetings.pending]: (state) => {
-          state.loading = true;
-      },
-      [fetchGreetings.fulfilled]: (state, action) => {
-          state.greetings = action.payload;
-          state.loading = false;
-      },
-      [fetchGreetings.rejected]: (state, action) => {
-          state.error = action.error.message;
-          state.loading = false;
-      },
+  extraReducers(builder) {
+    builder
+      .addCase(fetchGreetings.pending, (state) => ({
+        ...state,
+        loading: true,
+      }))
+      .addCase(fetchGreetings.fulfilled, (state, action) => ({
+        ...state,
+        greetings: action.payload,
+        loading: false,
+      }))
+      .addCase(fetchGreetings.rejected, (state, action) => ({
+        ...state,
+        error: action.error.message,
+        loading: false,
+      }));
   },
 });
 
